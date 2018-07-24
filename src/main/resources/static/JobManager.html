@@ -270,11 +270,19 @@
                     "jobClassName": this.form.jobName,
                     "jobGroupName": this.form.jobGroup,
                     "cronExpression": this.form.cronExpression
-                }, {emulateJSON: true}).then(function (res) {
-                    this.loadData(this.currentPage, this.pagesize);
-                    this.dialogFormVisible = false;
-                }, function () {
-                    console.log('failed');
+                }, {emulateJSON: true}).then(function ({data: content}) {
+                    console.log(content)
+                    if (content.code == 1000) {
+                        this.loadData(this.currentPage, this.pagesize);
+                        this.dialogFormVisible = false;
+                    } else {
+                        this.$alert(`${JSON.stringify(content)}`, '错误', {
+                            confirmButtonText: '确定',
+                            type: 'error'
+                        })
+                    }
+                }, err => {
+                    this.$alert(err);
                 });
             },
 

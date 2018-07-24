@@ -13,6 +13,6 @@ public class NewJob implements BaseJob {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        Log.debug("New Job执行时间: " + new Date());
+        Log.debug("[job group={}, New Job执行时间: {}]", context.getJobDetail().getKey().getGroup(), new Date());
     }
 }  

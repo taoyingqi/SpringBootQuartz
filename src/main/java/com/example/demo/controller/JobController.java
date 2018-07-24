@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.example.demo.util.Result;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.JobBuilder;
@@ -39,19 +40,15 @@ public class JobController {
     @Qualifier("Scheduler")
     private Scheduler scheduler;
 
-    private static Logger log = LoggerFactory.getLogger(JobController.class);
+    private final Logger Log = LoggerFactory.getLogger(this.getClass());
 
 
     @PostMapping(value = "/addjob")
-    public void addjob(@RequestParam(value = "jobClassName") String jobClassName,
+    public Result addjob(@RequestParam(value = "jobClassName") String jobClassName,
                        @RequestParam(value = "jobGroupName") String jobGroupName,
                        @RequestParam(value = "cronExpression") String cronExpression) throws Exception {
-        addJob(jobClassName, jobGroupName, cronExpression);
-    }
-
-    public void addJob(String jobClassName, String jobGroupName, String cronExpression) throws Exception {
-
-        // 启动调度器  
+//        addJob(jobClassName, jobGroupName, cronExpression);
+        // 启动调度器
         scheduler.start();
 
         //构建job信息
@@ -66,13 +63,12 @@ public class JobController {
 
         try {
             scheduler.scheduleJob(jobDetail, trigger);
-
         } catch (SchedulerException e) {
-            System.out.println("创建定时任务失败" + e);
-            throw new Exception("创建定时任务失败");
+            Log.error("创建定时任务失败", e);
+            return new Result(Result.ERROR, "创建定时任务失败");
         }
+        return new Result(Result.OK, "ok");
     }
-
 
     @PostMapping(value = "/pausejob")
     public void pausejob(@RequestParam(value = "jobClassName") String jobClassName, @RequestParam(value = "jobGroupName") String jobGroupName) throws Exception {
