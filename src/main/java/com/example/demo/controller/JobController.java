@@ -4,15 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.example.demo.util.Result;
-import org.quartz.CronScheduleBuilder;
-import org.quartz.CronTrigger;
-import org.quartz.JobBuilder;
-import org.quartz.JobDetail;
-import org.quartz.JobKey;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.TriggerBuilder;
-import org.quartz.TriggerKey;
+import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,10 +42,14 @@ public class JobController {
 //        addJob(jobClassName, jobGroupName, cronExpression);
         // 启动调度器
         scheduler.start();
-
+        JobDataMap jobDataMap = new JobDataMap();
+        jobDataMap.put("name", "A1");
+        jobDataMap.put("count", "20");
         //构建job信息
-        JobDetail jobDetail = JobBuilder.newJob(getClass(jobClassName).getClass()).withIdentity(jobClassName, jobGroupName).build();
-
+        JobDetail jobDetail = JobBuilder.newJob(getClass(jobClassName).getClass())
+                .withIdentity(jobClassName, jobGroupName)
+                .setJobData(jobDataMap)
+                .build();
         //表达式调度构建器(即任务执行的时间)
         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression);
 
@@ -105,8 +101,13 @@ public class JobController {
 
             CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
 
+            JobDataMap jobDataMap = new JobDataMap();
             // 按新的cronExpression表达式重新构建trigger
-            trigger = trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
+            trigger = trigger.getTriggerBuilder()
+                    .withIdentity(triggerKey).withSchedule(scheduleBuilder)
+                    .usingJobData("name", "A2")
+                    .usingJobData("host", "127.0.0.1")
+                    .build();
 
             // 按新的trigger重新设置job执行
             scheduler.rescheduleJob(triggerKey, trigger);
@@ -138,10 +139,9 @@ public class JobController {
         return map;
     }
 
-    public static BaseJob getClass(String classname) throws Exception {
+    public static Job getClass(String classname) throws Exception {
         Class<?> class1 = Class.forName(classname);
-        return (BaseJob) class1.newInstance();
+        return (Job) class1.newInstance();
     }
-
 
 }
