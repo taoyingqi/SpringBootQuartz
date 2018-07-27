@@ -15,7 +15,7 @@
         <setting name="defaultStatementTimeout" value="25"/>
         <setting name="defaultFetchSize" value="100"/>
         <setting name="safeRowBoundsEnabled" value="false"/>
-        <setting name="mapUnderscoreToCamelCase" value="false"/>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
         <setting name="localCacheScope" value="SESSION"/>
         <setting name="jdbcTypeForNull" value="OTHER"/>
         <setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString"/>

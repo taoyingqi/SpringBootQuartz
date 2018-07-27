@@ -8,17 +8,17 @@ import java.math.BigInteger;
 @Getter
 @Setter
 public class JobAndTrigger {
-	private String JOB_NAME;
-	private String JOB_GROUP;
-	private String JOB_CLASS_NAME;
-	private String TRIGGER_NAME;
-	private String TRIGGER_GROUP;
-	private String TRIGGER_STATE;
-	private String TRIGGER_TYPE;
-	private BigInteger REPEAT_INTERVAL;
-	private BigInteger TIMES_TRIGGERED;
-	private String CRON_EXPRESSION;
-	private String TIME_ZONE_ID;
+	private String jobName;
+	private String jobGroup;
+	private String jobClassName;
+	private String triggerName;
+	private String triggerGroup;
+	private String triggerState;
+	private String triggerType;
+	private BigInteger repeatInterval;
+	private BigInteger timesTriggered;
+	private String cronExpression;
+	private String timeZoneId;
 	
 
 	
