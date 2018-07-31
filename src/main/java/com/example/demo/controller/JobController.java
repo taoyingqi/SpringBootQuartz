@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,9 +28,11 @@ public class JobController {
     @Autowired
     private JobAndTriggerService jobAndTriggerService;
 
+    /**
+     * SchedulerFactory 不同不会执行
+     */
     //加入Qulifier注解，通过名称注入bean
     @Autowired
-    @Qualifier("Scheduler")
     private Scheduler scheduler;
 
     private final Logger Log = LoggerFactory.getLogger(this.getClass());
@@ -68,20 +71,12 @@ public class JobController {
 
     @PostMapping(value = "/pausejob")
     public void pausejob(@RequestParam(value = "jobClassName") String jobClassName, @RequestParam(value = "jobGroupName") String jobGroupName) throws Exception {
-        jobPause(jobClassName, jobGroupName);
-    }
-
-    public void jobPause(String jobClassName, String jobGroupName) throws Exception {
         scheduler.pauseJob(JobKey.jobKey(jobClassName, jobGroupName));
     }
 
 
     @PostMapping(value = "/resumejob")
     public void resumejob(@RequestParam(value = "jobClassName") String jobClassName, @RequestParam(value = "jobGroupName") String jobGroupName) throws Exception {
-        jobresume(jobClassName, jobGroupName);
-    }
-
-    public void jobresume(String jobClassName, String jobGroupName) throws Exception {
         scheduler.resumeJob(JobKey.jobKey(jobClassName, jobGroupName));
     }
 
